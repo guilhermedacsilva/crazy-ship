@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
-    public float speed;
+    public float rotationSpeed;
     public float shootFireRate;
     public GameObject shotPrefab;
     public Transform shotSpawn;
@@ -16,18 +16,51 @@ public class PlayerController : MonoBehaviour {
 	}
 	
 	void FixedUpdate () {
-	    if (Input.GetKey(KeyCode.D))
+	    if (SystemInfo.deviceType == DeviceType.Handheld)
         {
-            transform.Rotate(Vector3.forward * Time.deltaTime * speed);
+            MobileControls();
+        } else
+        {
+            PcControls();
+        }
+	}
+
+    void PcControls()
+    {
+        if (Input.GetKey(KeyCode.D))
+        {
+            transform.Rotate(Vector3.forward * Time.deltaTime * rotationSpeed);
         }
         else if (Input.GetKey(KeyCode.A))
         {
-            transform.Rotate(Vector3.forward * Time.deltaTime * -speed);
+            transform.Rotate(Vector3.forward * Time.deltaTime * -rotationSpeed);
         }
-        if (Input.GetKey(KeyCode.Space) && Time.time > shootTimeOK)
+        if (Time.time > shootTimeOK && Input.GetKey(KeyCode.Space))
         {
             Instantiate(shotPrefab, shotSpawn.position, transform.rotation);
             shootTimeOK = Time.time + shootFireRate;
         }
-	}
+    }
+
+    void MobileControls()
+    {
+        /*
+         * speed
+         * 0.4 = 1
+         * 0.3 = 0.75
+         * 0.2 = 0.5
+         * 0.1 = 0.25
+         */
+        float x = Input.acceleration.x;
+        if (x > 0.05 || x < -0.05)
+        {
+            transform.Rotate(Vector3.forward * Time.deltaTime * rotationSpeed * x * 2.5f);
+        }
+        if (Time.time > shootTimeOK 
+            && Input.GetTouch(0).phase == TouchPhase.Began)
+        {
+            Instantiate(shotPrefab, shotSpawn.position, transform.rotation);
+            shootTimeOK = Time.time + shootFireRate;
+        }
+    }
 }

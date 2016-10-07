@@ -3,22 +3,42 @@ using System.Collections;
 
 public class DestroyByShot : MonoBehaviour {
 
+    public bool playerShot;
     public GameObject otherExplosion;
 
 	void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))
+        if (isValidEnemyShot(other))
         {
-            if (otherExplosion != null)
-            {
-                Instantiate(
-                    otherExplosion, 
-                    other.transform.position, 
-                    other.transform.rotation);
-            }
-
-            Destroy(other.transform.parent.gameObject);
-            Destroy(gameObject);
+            Explode(other.transform);
         }
+        else if (isValidPlayerShot(other))
+        {
+            Explode(other.transform);
+        }
+    }
+
+    bool isValidEnemyShot(Collider other)
+    {
+        return !playerShot && other.CompareTag("Player");
+    }
+
+    bool isValidPlayerShot(Collider other)
+    {
+        return playerShot && other.CompareTag("Enemy");
+    }
+
+    void Explode(Transform other)
+    {
+        if (otherExplosion != null)
+        {
+            Instantiate(
+                otherExplosion,
+                other.position,
+                other.rotation);
+        }
+
+        Destroy(other.parent.gameObject);
+        Destroy(gameObject);
     }
 }
