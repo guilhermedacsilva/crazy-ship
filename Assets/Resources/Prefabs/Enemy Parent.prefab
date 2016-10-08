@@ -197,9 +197,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4762dde26c48054ab91dddb3d02f5f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 5
+  rotationSpeed: 20
   fireRate: 3
-  fireStartDelay: 3
+  fireStartDelay: 1
   shotPrefab: {fileID: 1000011512566170, guid: f309458d8f15b064687a2ad8acb0811a, type: 2}
 --- !u!135 &135000011066934150
 SphereCollider:
